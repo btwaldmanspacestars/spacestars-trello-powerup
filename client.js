@@ -1,18 +1,17 @@
 var FORM_URL = 'https://script.google.com/macros/s/AKfycbyWeyLXyFaMuzhrj9cPHd6Ayx7WYhYwuIk5N1nt_eIO_c1ekPDhOq3NzwmC06BMMGo1/exec?action=trelloform';
 
-window.TrelloPowerUp.initialize({
-  'card-buttons': function(t, options) {
-    return [{
-      icon: '',
-      text: 'Assign Task',
-      condition: 'always',
-      callback: function(t) {
-        return t.popup({
-          title: 'Assign Task',
-          url: FORM_URL,
-          height: 430
-        });
-      }
-    }];
-  }
+TrelloPowerUp.initialize({
+    'card-buttons': function(t, options) {
+          return [{
+                  icon: 'https://cdn.glitch.com/1b42d7fe-bda8-4af8-a6c8-eff0cea9e08a%2Frocket-ship.png?1494946700421',
+                  text: 'Assign Task',
+                  callback: function(t) {
+                            return t.popup({
+                                        title: 'Assign Task',
+                                        url: FORM_URL,
+                                        height: 430
+                            });
+                  }
+          }];
+    }
 });
