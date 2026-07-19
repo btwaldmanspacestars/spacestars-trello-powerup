@@ -2,146 +2,157 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css"/>
   <style>
-    body { font-family: system-ui, sans-serif; padding: 12px; font-size: 13px; }
+    body { font-family: system-ui, sans-serif; background: #F7F9FC; color: #0F172A; font-size: 13px; padding: 14px; margin: 0; }
+    h2 { font-size: 14px; font-weight: 700; color: #0B1E3D; margin: 0 0 12px; }
+    .card-name { background: #EFF6FF; border-radius: 6px; padding: 6px 9px; font-size: 11px; color: #1B4FBB; font-weight: 600; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .form-group { margin-bottom: 10px; }
-    label { display: block; font-size: 11px; font-weight: 600; color: #64748B; text-transform: uppercase; margin-bottom: 3px; }
-    input, select, textarea { width: 100%; padding: 7px 9px; border: 1px solid #E2E8F0; border-radius: 6px; font-size: 12px; }
-    textarea { height: 55px; resize: none; }
-    .card-name { background: #EFF6FF; border-radius: 6px; padding: 6px 9px; font-size: 11px; color: #1B4FBB; font-weight: 600; margin-bottom: 12px; }
+    label { display: block; font-size: 10px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    input, select, textarea { width: 100%; padding: 7px 9px; border: 1px solid #E2E8F0; border-radius: 6px; font-size: 12px; color: #0F172A; background: #fff; box-sizing: border-box; }
+    textarea { height: 50px; resize: none; }
     .required { color: #E84040; }
-    .error { color: #E84040; font-size: 11px; display: none; margin-top: 4px; }
-    .btn-row { display: flex; gap: 8px; margin-top: 12px; }
-    .btn { padding: 7px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; flex: 1; }
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+    .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; flex: 1; }
     .btn-primary { background: #1B4FBB; color: #fff; }
     .btn-cancel { background: #F1F5F9; color: #64748B; }
-    .loading { text-align: center; padding: 20px; color: #64748B; }
-    .success { text-align: center; padding: 20px; color: #166534; display: none; }
+    .error { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 6px; padding: 8px; color: #991B1B; font-size: 11px; display: none; margin-top: 8px; }
+    .success { background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 6px; padding: 12px; text-align: center; color: #166534; font-size: 13px; display: none; }
+    .loading { text-align: center; padding: 30px; color: #64748B; font-size: 12px; }
   </style>
 </head>
 <body>
-  <div id="loading" class="loading">Loading...</div>
-  <div id="main" style="display:none">
-    <div class="card-name" id="card-name"></div>
-    <div class="form-group">
-      <label>Task description <span class="required">*</span></label>
-      <textarea id="task-title" placeholder="What needs to be done?"></textarea>
-    </div>
-    <div class="form-group">
-      <label>Assign to <span class="required">*</span></label>
-      <select id="assignee"><option value="">Select team member...</option></select>
-    </div>
-    <div class="form-group">
-      <label>Due date <span class="required">*</span></label>
-      <input type="date" id="due-date"/>
-    </div>
-    <div class="form-group">
-      <label>Priority</label>
-      <select id="priority">
-        <option value="medium">Medium</option>
-        <option value="high">High</option>
-        <option value="low">Low</option>
-      </select>
-    </div>
-    <div class="error" id="error-msg"></div>
-    <div class="btn-row">
-      <button class="btn btn-cancel" id="btn-cancel">Cancel</button>
-      <button class="btn btn-primary" id="btn-submit">Assign Task</button>
-    </div>
+
+<div id="loading" class="loading">Loading...</div>
+
+<div id="main" style="display:none">
+  <h2>⭐ Assign Task</h2>
+  <div class="card-name" id="card-name"></div>
+  <div class="form-group">
+    <label>Task description <span class="required">*</span></label>
+    <textarea id="task-title" placeholder="What needs to be done?"></textarea>
   </div>
-  <div class="success" id="success-msg">✓ Task assigned successfully!</div>
+  <div class="form-group">
+    <label>Assign to <span class="required">*</span></label>
+    <select id="assignee"><option value="">Select team member...</option></select>
+  </div>
+  <div class="form-group">
+    <label>Due date <span class="required">*</span></label>
+    <input type="date" id="due-date"/>
+  </div>
+  <div class="form-group">
+    <label>Priority</label>
+    <select id="priority">
+      <option value="normal">Normal</option>
+      <option value="urgent">🚨 Urgent</option>
+    </select>
+  </div>
+  <div class="error" id="error-msg"></div>
+  <div class="btn-row">
+    <button class="btn btn-cancel" id="btn-cancel">Cancel</button>
+    <button class="btn btn-primary" id="btn-submit">Assign Task</button>
+  </div>
+</div>
 
-  <script src="https://p.trellocdn.com/power-up.min.js"></script>
-  <script>
-    var DEPLOY_URL = 'https://script.google.com/macros/s/AKfycbyWeyLXyFaMuzhrj9cPHd6Ayx7WYhYwuIk5N1nt_eIO_c1ekPDhOq3NzwmC06BMMGo1/exec';
-    var t = TrelloPowerUp.iframe();
-    var cardData = {};
+<div class="success" id="success-msg">
+  ✓ Task assigned!<br/><small>It will appear in SpaceStars Task Monitor.</small>
+</div>
 
-    t.render(function() {
+<script src="https://p.trellocdn.com/power-up.min.js"></script>
+<script>
+  var GET_USERS_URL = 'GET_USERS_URL';
+  var CREATE_TASK_URL = 'CREATE_TASK_URL';
+  var SHARED_SECRET = 'SHARED_SECRET';
+  var t = TrelloPowerUp.iframe();
+  var cardData = {};
+
+  window.onload = function () {
+    t.render(function () {
       return t.card('name', 'id', 'shortLink', 'url')
-        .then(function(card) {
+        .then(function (card) {
           cardData = card;
           document.getElementById('card-name').textContent = card.name;
           document.getElementById('task-title').value = card.name;
           return fetchUsers();
+        })
+        .catch(function () {
+          document.getElementById('loading').textContent = 'Error loading card. Please try again.';
         });
     });
 
-    function fetchUsers() {
-      return fetch(DEPLOY_URL + '?action=getUsers')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var sel = document.getElementById('assignee');
-          (data.users || []).forEach(function(u) {
-            var opt = document.createElement('option');
-            opt.value = u.email;
-            opt.textContent = u.name + (u.title ? ' — ' + u.title : '');
-            sel.appendChild(opt);
-          });
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('main').style.display = 'block';
-          t.sizeTo('#main').catch(function(){});
-        })
-        .catch(function() {
-          document.getElementById('loading').textContent = 'Error loading users.';
+    document.getElementById('btn-cancel').onclick = function () { t.closePopup(); };
+    document.getElementById('btn-submit').onclick = submitTask;
+  };
+
+  function fetchUsers() {
+    return fetch(GET_USERS_URL, {
+      headers: { 'X-Trello-Bridge-Secret': SHARED_SECRET }
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (users) {
+        var sel = document.getElementById('assignee');
+        (users || []).forEach(function (u) {
+          var opt = document.createElement('option');
+          opt.value = u.email;
+          opt.textContent = u.name + (u.title ? ' — ' + u.title : '');
+          sel.appendChild(opt);
         });
-    }
-
-    document.getElementById('btn-cancel').onclick = function() { t.closePopup(); };
-
-    document.getElementById('btn-submit').onclick = function() {
-      var title = document.getElementById('task-title').value.trim();
-      var assignee = document.getElementById('assignee').value;
-      var due = document.getElementById('due-date').value;
-      var priority = document.getElementById('priority').value;
-      var err = document.getElementById('error-msg');
-      err.style.display = 'none';
-
-      if (!title) { err.textContent = 'Please enter a task description.'; err.style.display = 'block'; return; }
-      if (!assignee) { err.textContent = 'Please select an assignee.'; err.style.display = 'block'; return; }
-      if (!due) { err.textContent = 'Please select a due date.'; err.style.display = 'block'; return; }
-
-      var btn = document.getElementById('btn-submit');
-      btn.textContent = 'Saving...';
-      btn.disabled = true;
-
-      var sel = document.getElementById('assignee');
-      var assigneeName = sel.options[sel.selectedIndex].text.split(' — ')[0];
-
-      fetch(DEPLOY_URL + '?action=createTrelloTask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: title,
-          assignee: assignee,
-          assigneeName: assigneeName,
-          due: due,
-          priority: priority,
-          cardId: cardData.id,
-          cardName: cardData.name,
-          cardUrl: cardData.url,
-          cardShortLink: cardData.shortLink
-        })
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('main').style.display = 'block';
+        t.sizeTo('#main').catch(function () {});
       })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
+      .catch(function () {
+        document.getElementById('loading').textContent = 'Error loading users.';
+      });
+  }
+
+  function submitTask() {
+    var title = document.getElementById('task-title').value.trim();
+    var assigneeEmail = document.getElementById('assignee').value;
+    var dueDate = document.getElementById('due-date').value;
+    var priority = document.getElementById('priority').value;
+    var err = document.getElementById('error-msg');
+    err.style.display = 'none';
+
+    if (!title) { err.textContent = 'Please enter a task description.'; err.style.display = 'block'; return; }
+    if (!assigneeEmail) { err.textContent = 'Please select an assignee.'; err.style.display = 'block'; return; }
+    if (!dueDate) { err.textContent = 'Please select a due date.'; err.style.display = 'block'; return; }
+
+    var btn = document.getElementById('btn-submit');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    fetch(CREATE_TASK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Trello-Bridge-Secret': SHARED_SECRET },
+      body: JSON.stringify({
+        cardId: cardData.id,
+        cardName: cardData.name,
+        cardUrl: cardData.url,
+        cardShortLink: cardData.shortLink,
+        title: title,
+        assigneeEmail: assigneeEmail,
+        dueDate: dueDate,
+        priority: priority
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
         if (data.success) {
           document.getElementById('main').style.display = 'none';
           document.getElementById('success-msg').style.display = 'block';
-          t.sizeTo('#success-msg').catch(function(){});
-          setTimeout(function() { t.closePopup(); }, 2000);
+          t.sizeTo('#success-msg').catch(function () {});
+          setTimeout(function () { t.closePopup(); }, 2000);
         } else {
           throw new Error(data.error || 'Unknown error');
         }
       })
-      .catch(function(e) {
+      .catch(function (e) {
         err.textContent = 'Error: ' + e.message;
         err.style.display = 'block';
         btn.textContent = 'Assign Task';
         btn.disabled = false;
       });
-    };
-  </script>
+  }
+</script>
 </body>
 </html>
