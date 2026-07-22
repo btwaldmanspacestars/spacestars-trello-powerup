@@ -1,3 +1,4 @@
+var ICON_URL = 'https://btwaldmanspacestars.github.io/spacestars-trello-powerup/plus-task-icon.svg';
 var FORM_URL = 'form.html';
 
 function openAssignPopup(t) {
@@ -11,7 +12,7 @@ function openAssignPopup(t) {
 TrelloPowerUp.initialize({
   'card-buttons': function (t, options) {
     return [{
-      icon: 'icon.svg',
+      icon: ICON_URL,
       text: 'Assign Task',
       condition: 'always',
       callback: openAssignPopup
@@ -21,7 +22,6 @@ TrelloPowerUp.initialize({
     return [{
       title: 'SpaceStars',
       text: '+ Task',
-      icon: './plus-task-icon.svg',
       color: 'blue',
       callback: openAssignPopup
     }];
