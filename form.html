@@ -83,6 +83,7 @@
   var SHARED_SECRET = '1a7c389b608d267d1dcab4978bdb7550c04788a2f91e1aaef0acf753ede92ef9';
   var t = TrelloPowerUp.iframe();
   var cardData = {};
+  var currentMember = {};
 
   function todayISO() {
     var d = new Date();
@@ -102,10 +103,14 @@
     });
 
     t.render(function () {
-      return t.card('name', 'id', 'shortLink', 'url')
-        .then(function (card) {
-          cardData = card;
-          document.getElementById('card-name-text').textContent = card.name;
+      return Promise.all([
+        t.card('name', 'id', 'shortLink', 'url'),
+        t.member('id', 'username')
+      ])
+        .then(function (results) {
+          cardData = results[0];
+          currentMember = results[1] || {};
+          document.getElementById('card-name-text').textContent = cardData.name;
           return fetchUsers();
         })
         .catch(function () {
@@ -168,7 +173,9 @@
         title: title,
         assigneeEmail: assigneeEmail,
         dueDate: dueDate,
-        priority: priority
+        priority: priority,
+        creatorTrelloMemberId: currentMember.id || null,
+        creatorTrelloUsername: currentMember.username || null
       })
     })
       .then(function (r) { return r.json(); })
